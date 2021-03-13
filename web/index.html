@@ -1,15 +1,121 @@
 <html>
 
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        crossorigin="anonymous"></script>
+
     <script>
         document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=2"></' + 'script>')
     </script>
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
     <script src="rf.js"></script>
+    <script>
+        function downloadAsPng() {
+            document.getElementById("downloader").download = "image.png";
+            document.getElementById("downloader").href = document.getElementById("rf-canvas").toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+        }
+        function addLayer() {
+            let n_layers = parseInt(localStorage.getItem('n_layers'));
+            if (isNaN(n_layers)) {
+                n_layers = 0;
+            }
+            n_layers += 1;
+
+            let kernel = document.getElementById('textKernelSize').value;
+            let stride = document.getElementById('textStride').value;
+            let padding = document.getElementById('textPadding').value;
+            let dilation = document.getElementById('textDilation').value;
+            let layer_info = JSON.stringify({ "kernel": kernel, "stride": stride, 'padding': padding, 'dilation': dilation });
+            let layer_name = 'layer' + n_layers;
+            console.log('Add Layer:', layer_name, layer_info);
+
+            localStorage.setItem(layer_name, layer_info);
+            localStorage.setItem('n_layers', n_layers);
+
+            init();
+        }
+    </script>
 </head>
 
 <body onload="init();">
-    <canvas id="demoCanvas" width="1900" height="1800"></canvas>
+    <header>
+        <div class="collapse bg-dark" id="navbarHeader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 col-md-7 py-4">
+                        <h4 class="text-white">About</h4>
+                        <p class="text-muted">Add some information about the album below, the author, or any other
+                            background context. Make it a few sentences long so folks can pick up some informative
+                            tidbits. Then, link them off to some social networking sites or contact information.</p>
+                    </div>
+                    <div class="col-sm-4 offset-md-1 py-4">
+                        <h4 class="text-white">Contact</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="https://github.com/jojonki/" class="text-white">Contact to jojonki@Github</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <strong>Visualizing Receptive Field</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
+                    aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div id="layers">
+
+    </div>
+
+    <div class="container">
+        <div class="container">
+            <div>
+                <a href="#" id="downloader" class="btn btn-info" onclick="downloadAsPng()" download="image.png">Download
+                    as PNG</a>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    INPUT SIZE
+                    <input class="form-control" id="textInputSize" value=50 onChange="init();">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    KERNEL SIZE
+                    <input class="form-control" id="textKernelSize" value=3>
+                </div>
+                <div class="col-sm">
+                    STRIDE
+                    <input class="form-control" id="textStride" value=2>
+                </div>
+                <div class="col-sm">
+                    PADDING
+                    <input class="form-control" id="textPadding" value=0>
+                </div>
+                <div class="col-sm">
+                    DILATION
+                    <input class="form-control" id="textDilation" value=1>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" onClick="addLayer();">Add Layer</button>
+            <button type="submit" class="btn btn-danger" onClick="localStorage.clear(); init();">Reset
+            </button>
+        </div>
+    </div>
+
+    <canvas id="rf-canvas" width="1280" height="1080"></canvas>
 </body>
 
 </html>
