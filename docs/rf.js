@@ -106,6 +106,7 @@ function init() {
     let stride_width = w + offset;
     let stride_height = 80;
     let most_left_x = 150;
+    let text_offset_x = 40;
 
     let data = new Variable(n_in = L, j_in = 1, r_in = 1, start_in = 0.5);
     let y = stride_height;
@@ -119,6 +120,7 @@ function init() {
     }
     // text
     var text = new createjs.Text('Input\nL=' + L, "20px serif", in_color);
+    text.x = text_offset_x;
     text.y += y;
     stage.addChild(text);
 
@@ -146,6 +148,7 @@ function init() {
         var layer_info = 'Layer ' + (layer + 1) + "\nK=" + kernel + ", S=" + stride + "\nRF=" + rf_list[rf_list.length - 1]
             + '\nL=' + L;
         var text = new createjs.Text(layer_info, "18px serif", color);
+        text.x = text_offset_x;
         text.y += y - 30;
         stage.addChild(text);
 

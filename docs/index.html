@@ -80,42 +80,44 @@
     </div>
 
     <div class="container">
-        <div class="container">
-            <div>
+        <hr>
+        <div class="row">
+            <div class="col-sm">
+                <!-- INPUT SIZE -->
+                <label class="form-label">INPUT SIZE</label>
+                <input class="form-control" id="textInputSize" value=50 onChange="init();">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <label class="form-label">KERNEL</label>
+                <input class="form-control" id="textKernelSize" value=3>
+            </div>
+            <div class="col-sm">
+                <label class="form-label">STRIDE</label>
+                <input class="form-control" id="textStride" value=2>
+            </div>
+            <div class="col-sm">
+                <label class="form-label">PADDING</label>
+                <input class="form-control" id="textPadding" value=0>
+            </div>
+            <div class="col-sm">
+                <label class="form-label">DILATION</label>
+                <input class="form-control" id="textDilation" value=1>
+            </div>
+        </div>
+        <div class="row" style="margin-top:0.5em">
+            <div class="col-sm">
+                <button type="submit" class="btn btn-primary" onClick="addLayer();">Add Layer</button>
+                <button type="submit" class="btn btn-danger" onClick="localStorage.clear(); init();">Reset Network
+                </button>
                 <a href="#" id="downloader" class="btn btn-info" onclick="downloadAsPng()" download="image.png">Download
                     as PNG</a>
             </div>
-            <div class="row">
-                <div class="col-sm">
-                    INPUT SIZE
-                    <input class="form-control" id="textInputSize" value=50 onChange="init();">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm">
-                    KERNEL SIZE
-                    <input class="form-control" id="textKernelSize" value=3>
-                </div>
-                <div class="col-sm">
-                    STRIDE
-                    <input class="form-control" id="textStride" value=2>
-                </div>
-                <div class="col-sm">
-                    PADDING
-                    <input class="form-control" id="textPadding" value=0>
-                </div>
-                <div class="col-sm">
-                    DILATION
-                    <input class="form-control" id="textDilation" value=1>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary" onClick="addLayer();">Add Layer</button>
-            <button type="submit" class="btn btn-danger" onClick="localStorage.clear(); init();">Reset
-            </button>
-        </div>
-    </div>
 
-    <canvas id="rf-canvas" width="1280" height="1080"></canvas>
+
+            <canvas id="rf-canvas" width="1280" height="1080"></canvas>
+        </div>
 </body>
 
 </html>
