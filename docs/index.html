@@ -32,12 +32,9 @@
             let dilation = parseInt(document.getElementById('textDilation').value);
             let layer_info = JSON.stringify({ "kernel": kernel, "stride": stride, 'padding': padding, 'dilation': dilation });
             let layer_name = 'layer' + n_layers;
-            // console.log('Add Layer:', layer_name, layer_info);
 
             localStorage.setItem(layer_name, layer_info);
             localStorage.setItem('n_layers', n_layers);
-
-            init();
         }
 
         function resetLayer(cmd) {
@@ -56,9 +53,13 @@
             } else {
                 console.warn('Unknown resetLayer command:', cmd)
             }
+            updateTable();
+        }
+        function clearTable() {
+            document.getElementById('layerTable').innerHTML = '';
         }
         function updateTable() {
-            document.getElementById('layerTable').innerHTML = '';
+            clearTable();
             let n_layers = parseInt(localStorage.getItem('n_layers'));
             if (isNaN(n_layers)) {
                 return
@@ -123,7 +124,6 @@
                 }
             }
             tbl.appendChild(tbody);
-            // body.appendChild(tbl);
             layerTable.appendChild(tbl);
         }
     </script>
@@ -175,9 +175,12 @@
 
         <div class="row" style="margin-top:0.5em">
             <div class="col">
-                <button type="submit" class="btn btn-primary" onClick="addLayer();">Add Layer</button>
-                <button type="submit" class="btn btn-danger" onClick="resetLayer('ALL'); init();">Reset Network</button>
-                <button type="submit" class="btn btn-warning" onClick="resetLayer('LAST'); init();">Remove Layer
+                <button type="submit" class="btn btn-primary" onClick="addLayer(); init(); updateTable();">Add
+                    Layer</button>
+                <button type="submit" class="btn btn-danger" onClick="resetLayer('ALL'); init(); updateTable();">Reset
+                    Network</button>
+                <button type="submit" class="btn btn-warning"
+                    onClick="resetLayer('LAST'); init(); updateTable();">Remove Layer
                 </button>
                 <a href="#" id="downloader" class="btn btn-info" onclick="downloadAsPng()" download="image.png">Download
                     as PNG</a>
@@ -188,7 +191,7 @@
         </div>
 
         <div class="row">
-            <canvas id="rf-canvas" width="1140" height="1920" style=""></canvas>
+            <canvas id="rf-canvas" width="1140" height="1920"></canvas>
         </div>
     </div>
 </body>

@@ -182,6 +182,5 @@ function init() {
         localStorage.setItem(layer_name, JSON.stringify(layer_info));
     }
 
-    updateTable();
     stage.update();
 }
