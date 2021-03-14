@@ -14,7 +14,6 @@
     </script>
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
     <script src="graphics.js"></script>
-    <script src="rf.js"></script>
     <script>
         function downloadAsPng() {
             document.getElementById("downloader").download = "image.png";
@@ -57,9 +56,76 @@
             } else {
                 console.warn('Unknown resetLayer command:', cmd)
             }
+        }
+        function updateTable() {
+            document.getElementById('layerTable').innerHTML = '';
+            let n_layers = parseInt(localStorage.getItem('n_layers'));
+            if (isNaN(n_layers)) {
+                return
+            }
+            let headers = ['Layer #', 'Kernel', 'Stride', 'Padding', 'Dilation', 'In size', 'Out size', 'Receptive Field'];
+            let tbl = document.createElement('table');
+            tbl.className = 'table table-striped';
+            let tbody = document.createElement('tbody');
+            for (let layer = 0; layer < n_layers + 1; layer++) {
+                if (layer == 0) {
+                    let thead = document.createElement('thead');
+                    // thead.className = 'thead-striped';
+                    let tr = document.createElement('tr');
+                    headers.forEach(head => {
+                        let th = document.createElement('th');
+                        th.appendChild(document.createTextNode(head));
+                        tr.appendChild(th);
+                    });
+                    thead.appendChild(tr);
+                    tbl.appendChild(thead);
+                } else {
+                    // var tr = tbl.insertRow();
+                    let net = JSON.parse(localStorage.getItem('layer' + layer));
+                    console.log('--net-', net);
+                    let tr = document.createElement('tr');
+                    headers.forEach(head => {
+                        let td = tr.insertCell();
+                        let text = '';
+                        switch (head) {
+                            case 'Layer #':
+                                text = layer;
+                                break;
+                            case 'Kernel':
+                                text = net.kernel;
+                                break;
+                            case 'Stride':
+                                text = net.stride;
+                                break;
+                            case 'Padding':
+                                text = net.padding;
+                                break;
+                            case 'Dilation':
+                                text = net.dilation;
+                                break;
+                            case 'Receptive Field':
+                                text = net.receptive_field;
+                                break;
+                            case 'In size':
+                                text = net.in_size;
+                                break;
+                            case 'Out size':
+                                text = net.out_size;
+                                break;
 
+                        }
+                        td.appendChild(document.createTextNode(text));
+                        tr.append(td);
+                    });
+                    tbody.appendChild(tr);
+                }
+            }
+            tbl.appendChild(tbody);
+            // body.appendChild(tbl);
+            layerTable.appendChild(tbl);
         }
     </script>
+    <script src="rf.js"></script>
 </head>
 
 <body onload="init();">
@@ -80,32 +146,33 @@
     <div class="container">
         <hr>
         <div class="row">
-            <div class="col-sm">
+            <div class="col">
                 <!-- INPUT SIZE -->
                 <label class="form-label">INPUT SIZE</label>
-                <input class="form-control" id="textInputSize" value=20 onChange="init();">
+                <input class="form-control" id="textInputSize" value=30 onChange="init();">
             </div>
         </div>
         <div class="row">
-            <div class="col-sm">
+            <div class="col">
                 <label class="form-label">KERNEL</label>
                 <input class="form-control" id="textKernelSize" value=3>
             </div>
-            <div class="col-sm">
+            <div class="col">
                 <label class="form-label">STRIDE</label>
                 <input class="form-control" id="textStride" value=2>
             </div>
-            <div class="col-sm">
+            <div class="col">
                 <label class="form-label">PADDING</label>
                 <input class="form-control" id="textPadding" value=2>
             </div>
-            <div class="col-sm">
+            <div class="col">
                 <label class="form-label">DILATION</label>
                 <input class="form-control" id="textDilation" value=1>
             </div>
         </div>
+
         <div class="row" style="margin-top:0.5em">
-            <div class="col-sm">
+            <div class="col">
                 <button type="submit" class="btn btn-primary" onClick="addLayer();">Add Layer</button>
                 <button type="submit" class="btn btn-danger" onClick="resetLayer('ALL'); init();">Reset Network</button>
                 <button type="submit" class="btn btn-warning" onClick="resetLayer('LAST'); init();">Remove Layer
@@ -113,10 +180,15 @@
                 <a href="#" id="downloader" class="btn btn-info" onclick="downloadAsPng()" download="image.png">Download
                     as PNG</a>
             </div>
-
-
-            <canvas id="rf-canvas" width="1280" height="1080"></canvas>
         </div>
+        <div class="row" style="margin-top:0.5em">
+            <div id="layerTable" class="col"></div>
+        </div>
+
+        <div class="row">
+            <canvas id="rf-canvas" width="1140" height="1920" style=""></canvas>
+        </div>
+    </div>
 </body>
 
 </html>

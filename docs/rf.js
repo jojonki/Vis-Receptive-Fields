@@ -16,12 +16,17 @@ class ConvLayer {
         this.stride = stride;
         this.padding = padding;
         this.dilation = dilation;
+
+        this.receptive_field = null;
+        this.in_size = null;
+        this.out_size = null;
     }
 
     forward(x) {
         let k = this.kernel_size;
         let s = this.stride;
         let p = this.padding;
+        let d = this.dilation;
 
         let n_in = x.n_in;
         let j_in = x.j_in;
@@ -41,10 +46,18 @@ class ConvLayer {
         }
 
         let j_out = j_in * s;
-        let r_out = r_in + (k - 1) * j_in;
+        // let r_out = r_in + (k - 1) * j_in;
+        let r_out = r_in + (k - 1) * j_in * d;
         let start_out = start_in + ((k - 1) / 2 - pad_L) * j_in;
         return new Variable({ 'n_in': n_out, 'j_in': j_out, 'r_in': r_out, 'start_in': start_out });
     }
+
+    // get rf() {
+    //     return this.receptive_field;
+    // }
+    // set rf(recptive_field) {
+    //     this.receptive_field = recptive_field;
+    // }
 }
 
 
@@ -56,7 +69,7 @@ function init() {
     let line_color = "Black";
     // https://coolors.co/palettes/trending
     let layer_colors = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"];
-    let w = 18;
+    let w = 20;
     let h = w;
     let hw = w / 2;
     let L = parseInt(document.getElementById("textInputSize").value);
@@ -113,6 +126,7 @@ function init() {
         let y = stride_height * (layer + 2);
         let prev_stride_width = stride_width;
 
+        let prev_L = L;
         L = Math.floor((L - kernel + padding * 2) / stride) + 1;
         if (L <= 0) {
             alert('No more layers can be added.');
@@ -120,6 +134,9 @@ function init() {
         }
         data = net.forward(data);
         rf_list.push(data.r_in);
+        net.receptive_field = data.r_in
+        net.in_size = prev_L;
+        net.out_size = L;
 
         // text
         let layer_info = 'Layer ' + (layer + 1) + "\nK" + kernel + ",S" + stride + ",D" + dilation + ",P" + padding + "\nRF=" + rf_list[rf_list.length - 1]
@@ -145,7 +162,7 @@ function init() {
 
         let data_offset_x = begin_offset_list[layer] - prev_stride_width * padding;
         for (let i = 0; i < L; i++) {
-            let x = data_offset_x + stride_width * i + ((kernel - 1) * prev_stride_width) / 2;
+            let x = data_offset_x + stride_width * i + ((kernel - 1) * prev_stride_width) * dilation / 2;
             if (i == 0) {
                 begin_offset_list.push(x);
             } else if (i == L - 1) {
@@ -162,11 +179,11 @@ function init() {
             // draw kernel lines
             let prev_y = y - stride_height + w;
             for (let j = 0; j < kernel; j++) {
-                let from_x = (x + hw) - prev_stride_width * (kernel - 1) / 2;
+                let from_x = (x + hw) - prev_stride_width * (kernel - 1) * dilation / 2;
                 if (is_focus_ndoe) { // base data for RF
-                    drawLine(stage, x + hw, y, from_x + (prev_stride_width) * j, prev_y, 'Green');
+                    drawLine(stage, x + hw, y, from_x + (prev_stride_width) * dilation * j, prev_y, 'Green');
                 } else {
-                    drawLine(stage, x + hw, y, from_x + (prev_stride_width) * j, prev_y, line_color);
+                    drawLine(stage, x + hw, y, from_x + (prev_stride_width) * dilation * j, prev_y, line_color);
                 }
             }
         }
@@ -180,7 +197,15 @@ function init() {
         let rep_y = stride_height - hw;
         let color = layer_colors[layer % layer_colors.length];
         drawRect(stage, rep_x, rep_y, rep_width, h + hw + stride_height * (layer + 1), color, 0.5, true);
+
+        let layer_name = 'layer' + (layer + 1);
+        let layer_info = JSON.parse(localStorage.getItem(layer_name));
+        layer_info['receptive_field'] = MyNet[layer].receptive_field;
+        layer_info['in_size'] = MyNet[layer].in_size;
+        layer_info['out_size'] = MyNet[layer].out_size;
+        localStorage.setItem(layer_name, JSON.stringify(layer_info));
     }
 
+    updateTable();
     stage.update();
 }
