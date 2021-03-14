@@ -27,13 +27,13 @@
             }
             n_layers += 1;
 
-            let kernel = document.getElementById('textKernelSize').value;
-            let stride = document.getElementById('textStride').value;
-            let padding = document.getElementById('textPadding').value;
-            let dilation = document.getElementById('textDilation').value;
+            let kernel = parseInt(document.getElementById('textKernelSize').value);
+            let stride = parseInt(document.getElementById('textStride').value);
+            let padding = parseInt(document.getElementById('textPadding').value);
+            let dilation = parseInt(document.getElementById('textDilation').value);
             let layer_info = JSON.stringify({ "kernel": kernel, "stride": stride, 'padding': padding, 'dilation': dilation });
             let layer_name = 'layer' + n_layers;
-            console.log('Add Layer:', layer_name, layer_info);
+            // console.log('Add Layer:', layer_name, layer_info);
 
             localStorage.setItem(layer_name, layer_info);
             localStorage.setItem('n_layers', n_layers);
@@ -50,6 +50,9 @@
                     localStorage.removeItem('layer' + n_layers)
                     n_layers -= 1;
                     localStorage.setItem('n_layers', n_layers);
+                    if (n_layers == 0) {
+                        resetLayer('ALL');
+                    }
                 }
             } else {
                 console.warn('Unknown resetLayer command:', cmd)
@@ -80,7 +83,7 @@
             <div class="col-sm">
                 <!-- INPUT SIZE -->
                 <label class="form-label">INPUT SIZE</label>
-                <input class="form-control" id="textInputSize" value=50 onChange="init();">
+                <input class="form-control" id="textInputSize" value=20 onChange="init();">
             </div>
         </div>
         <div class="row">
@@ -94,7 +97,7 @@
             </div>
             <div class="col-sm">
                 <label class="form-label">PADDING</label>
-                <input class="form-control" id="textPadding" value=0>
+                <input class="form-control" id="textPadding" value=2>
             </div>
             <div class="col-sm">
                 <label class="form-label">DILATION</label>
