@@ -70,7 +70,8 @@ class ConvLayer {
 
 
 function init() {
-    var stage = new createjs.Stage("rf-canvas");
+    let stage = new createjs.Stage("rf-canvas");
+    let font = '20px Arial';
     MyNet = [];
     let n_layers = localStorage.getItem('n_layers');
     console.log(n_layers);
@@ -97,7 +98,7 @@ function init() {
     // let layer_colors = ["#FBBC05", "#34A853", "#EA4335"];
     // https://coolors.co/palettes/trending
     let layer_colors = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"];
-    let w = 14;
+    let w = 18;
     let h = w;
     let hw = w / 2;
     // let L = 80;
@@ -119,7 +120,7 @@ function init() {
         // stage.addChild(circle);
     }
     // text
-    var text = new createjs.Text('Input\nL=' + L, "20px serif", in_color);
+    var text = new createjs.Text('Input\nL=' + L, font, in_color);
     text.x = text_offset_x;
     text.y += y;
     stage.addChild(text);
@@ -140,14 +141,17 @@ function init() {
 
         // draw layer
         console.log('L=' + L);
-        if (L <= 0) continue;
+        if (L <= 0) {
+            alert('No more layers can be added.');
+            return;
+        }
         data = net.forward(data);
         rf_list.push(data.r_in);
 
         // text
         var layer_info = 'Layer ' + (layer + 1) + "\nK=" + kernel + ", S=" + stride + "\nRF=" + rf_list[rf_list.length - 1]
             + '\nL=' + L;
-        var text = new createjs.Text(layer_info, "18px serif", color);
+        var text = new createjs.Text(layer_info, font, color);
         text.x = text_offset_x;
         text.y += y - 30;
         stage.addChild(text);
@@ -187,6 +191,9 @@ function init() {
         // let rep_x = rep_origin_x - (rep_field - 1) * (w + offset) / 2 - offset / 2;
         // let rep_x = rep_origin_x - (w + offset) * (MyNet[layer].stride - 1) - offset / 2;
         let rep_x = rep_origin_x - (w + offset) * (rf_list[layer] - 1) / 2 - offset / 2;
+        if (rep_x < most_left_x) {
+            rep_x = most_left_x;
+        }
         let rep_y = stride_height - (hw * (layer + 1)) / 2;
         let color = layer_colors[layer % layer_colors.length];
         drawRect(stage, rep_x, rep_y, rep_width, w + hw * (layer + 1), color, alpha = 0.7, behind = true);
