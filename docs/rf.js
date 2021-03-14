@@ -1,25 +1,4 @@
-
-function drawRect(stage, x, y, w, h, color, alpha = 1.0, behind = false) {
-    let rect = new createjs.Shape();
-    rect.graphics.beginFill(color).drawRect(x, y, w, h);
-    if (alpha < 1.0) {
-        rect.alpha = alpha;
-    }
-    stage.addChild(rect);
-    if (behind) {
-        stage.setChildIndex(rect, 0);
-    }
-}
-
-function drawLine(stage, x1, y1, x2, y2, color) {
-    let line = new createjs.Graphics();
-    line.beginStroke(color);
-    line.moveTo(x1, y1);
-    line.lineTo(x2, y2);
-    line.endStroke();
-    let shape = new createjs.Shape(line);
-    stage.addChild(shape);
-}
+'use strict';
 
 class Variable {
     constructor(n_in, j_in, r_in, start_in) {
@@ -72,7 +51,7 @@ class ConvLayer {
 function init() {
     let stage = new createjs.Stage("rf-canvas");
     let font = '20px Arial';
-    MyNet = [];
+    let MyNet = [];
     let n_layers = localStorage.getItem('n_layers');
     console.log(n_layers);
     if (n_layers == null) {
@@ -109,7 +88,7 @@ function init() {
     let most_left_x = 150;
     let text_offset_x = 40;
 
-    let data = new Variable(n_in = L, j_in = 1, r_in = 1, start_in = 0.5);
+    let data = new Variable(L, 1, 1, 0.5);
     let y = stride_height;
     // draw input data
     for (let i = 0; i < data.n_in; i++) {
@@ -125,14 +104,11 @@ function init() {
     text.y += y;
     stage.addChild(text);
 
-
-
     let rf_list = []
-
     let rep_origin_x = null;
     let left_offset = 0;
     for (let layer = 0; layer < MyNet.length; layer++) {
-        net = MyNet[layer];
+        let net = MyNet[layer];
         let kernel = net.kernel_size;
         let stride = net.stride;
         let color = layer_colors[layer % layer_colors.length];
@@ -149,9 +125,9 @@ function init() {
         rf_list.push(data.r_in);
 
         // text
-        var layer_info = 'Layer ' + (layer + 1) + "\nK=" + kernel + ", S=" + stride + "\nRF=" + rf_list[rf_list.length - 1]
+        let layer_info = 'Layer ' + (layer + 1) + "\nK=" + kernel + ", S=" + stride + "\nRF=" + rf_list[rf_list.length - 1]
             + '\nL=' + L;
-        var text = new createjs.Text(layer_info, font, color);
+        let text = new createjs.Text(layer_info, font, color);
         text.x = text_offset_x;
         text.y += y - 30;
         stage.addChild(text);
@@ -196,7 +172,7 @@ function init() {
         }
         let rep_y = stride_height - (hw * (layer + 1)) / 2;
         let color = layer_colors[layer % layer_colors.length];
-        drawRect(stage, rep_x, rep_y, rep_width, w + hw * (layer + 1), color, alpha = 0.7, behind = true);
+        drawRect(stage, rep_x, rep_y, rep_width, w + hw * (layer + 1), color, 0.7, true);
     }
 
     stage.update();
