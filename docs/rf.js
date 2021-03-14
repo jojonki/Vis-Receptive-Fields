@@ -54,16 +54,17 @@ class ConvLayer {
 }
 
 
-function init() {
+function update() {
     // parameters
     let font = '18px Arial';
-    let in_color = "#4285F4";
+    let in_color = "#3020ff";
     let pad_color = "Gray";
     let line_color = "Black";
-    // https://coolors.co/palettes/trending
-    let layer_colors = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"];
+    let layer_colors = ['#4285F4', '#DB4437', '#F4B400', '#0F9D58'];
+    let rep_colors = ["#97befc", "#e38e86", "#fae098", "#5ecc96"];
+
     localStorage.setItem('layer_colors', JSON.stringify(layer_colors));
-    let w = 20;
+    let w = 18;
     let h = w;
     let hw = w / 2;
     let L = parseInt(document.getElementById("textInputSize").value);
@@ -172,7 +173,7 @@ function init() {
         let rep_x = rep_origin_x - (w + offset) * (rf_list[layer] - 1) / 2 - offset / 2;
         let rep_y = stride_height - hw;
         let color = layer_colors[layer % layer_colors.length];
-        drawRect(stage, rep_x, rep_y, rep_width, h + hw + stride_height * (layer + 1), color, 0.5, true);
+        drawRect(stage, rep_x, rep_y, rep_width, h + hw + stride_height * (layer + 1), rep_colors[layer % rep_colors.length], 1, true);
 
         let layer_name = 'layer' + (layer + 1);
         let layer_info = JSON.parse(localStorage.getItem(layer_name));
