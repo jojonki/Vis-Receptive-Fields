@@ -39,6 +39,22 @@
 
             init();
         }
+
+        function resetLayer(cmd) {
+            if (cmd == 'ALL') {
+                localStorage.clear();
+            } else if (cmd == 'LAST') {
+                let n_layers = parseInt(localStorage.getItem('n_layers'));
+                if (!isNaN(n_layers) && n_layers > 0) {
+                    localStorage.removeItem('layer' + n_layers)
+                    n_layers -= 1;
+                    localStorage.setItem('n_layers', n_layers);
+                }
+            } else {
+                console.warn('Unknown resetLayer command:', cmd)
+            }
+
+        }
     </script>
 </head>
 
@@ -87,7 +103,8 @@
         <div class="row" style="margin-top:0.5em">
             <div class="col-sm">
                 <button type="submit" class="btn btn-primary" onClick="addLayer();">Add Layer</button>
-                <button type="submit" class="btn btn-danger" onClick="localStorage.clear(); init();">Reset Network
+                <button type="submit" class="btn btn-danger" onClick="resetLayer('ALL'); init();">Reset Network</button>
+                <button type="submit" class="btn btn-warning" onClick="resetLayer('LAST'); init();">Remove Layer
                 </button>
                 <a href="#" id="downloader" class="btn btn-info" onclick="downloadAsPng()" download="image.png">Download
                     as PNG</a>
