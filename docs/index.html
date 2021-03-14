@@ -84,9 +84,9 @@
                 } else {
                     // var tr = tbl.insertRow();
                     let net = JSON.parse(localStorage.getItem('layer' + layer));
-                    console.log('--net-', net);
                     let tr = document.createElement('tr');
-                    tr.style.backgroundColor = layer_colors[layer - 1];
+                    tr.style.color = 'white';
+                    tr.style.backgroundColor = layer_colors[(layer - 1) % layer_colors.length];
                     headers.forEach(head => {
                         let td = tr.insertCell();
                         let text = '';
@@ -130,7 +130,7 @@
     <script src="rf.js"></script>
 </head>
 
-<body onload="init();">
+<body onload="update();">
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
@@ -151,7 +151,7 @@
             <div class="col">
                 <!-- INPUT SIZE -->
                 <label class="form-label">INPUT SIZE</label>
-                <input class="form-control" id="textInputSize" value=30 onChange="init();">
+                <input class="form-control" id="textInputSize" value=30 onChange="update();">
             </div>
         </div>
         <div class="row">
@@ -175,12 +175,12 @@
 
         <div class="row" style="margin-top:0.5em">
             <div class="col">
-                <button type="submit" class="btn btn-primary" onClick="addLayer(); init(); updateTable();">Add
+                <button type="submit" class="btn btn-primary" onClick="addLayer(); update(); updateTable();">Add
                     Layer</button>
-                <button type="submit" class="btn btn-danger" onClick="resetLayer('ALL'); init(); updateTable();">Reset
+                <button type="submit" class="btn btn-danger" onClick="resetLayer('ALL'); update(); updateTable();">Reset
                     Network</button>
                 <button type="submit" class="btn btn-warning"
-                    onClick="resetLayer('LAST'); init(); updateTable();">Remove Layer
+                    onClick="resetLayer('LAST'); update(); updateTable();">Remove Layer
                 </button>
                 <a href="#" id="downloader" class="btn btn-info" onclick="downloadAsPng()" download="image.png">Download
                     as PNG</a>
