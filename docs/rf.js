@@ -69,6 +69,7 @@ function init() {
     let line_color = "Black";
     // https://coolors.co/palettes/trending
     let layer_colors = ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"];
+    localStorage.setItem('layer_colors', JSON.stringify(layer_colors));
     let w = 20;
     let h = w;
     let hw = w / 2;
@@ -76,7 +77,7 @@ function init() {
     let offset = 2;
     let stride_width = w + offset;
     let stride_height = 80;
-    const most_left_x = 420;
+    const most_left_x = 220;
     const text_offset_x = 10;
 
     // initialize
@@ -107,10 +108,10 @@ function init() {
     }
     let begin_offset_list = [most_left_x];
     let end_offset_list = [most_left_x + stride_width * (L - 1)];
-    var text = new createjs.Text('Input\nL=' + L, font, in_color);
-    text.x = text_offset_x;
-    text.y += y;
-    stage.addChild(text);
+    // var text = new createjs.Text('Input\nL=' + L, font, in_color);
+    // text.x = text_offset_x;
+    // text.y += y;
+    // stage.addChild(text);
 
     // draw layers
     let rf_list = [];
@@ -139,12 +140,12 @@ function init() {
         net.out_size = L;
 
         // text
-        let layer_info = 'Layer ' + (layer + 1) + "\nK" + kernel + ",S" + stride + ",D" + dilation + ",P" + padding + "\nRF=" + rf_list[rf_list.length - 1]
-            + '\nL=' + L;
-        let text = new createjs.Text(layer_info, font, color);
-        text.x = text_offset_x;
-        text.y += y - 30;
-        stage.addChild(text);
+        // let layer_info = 'Layer ' + (layer + 1) + "\nK" + kernel + ",S" + stride + ",D" + dilation + ",P" + padding + "\nRF=" + rf_list[rf_list.length - 1]
+        //     + '\nL=' + L;
+        // let text = new createjs.Text(layer_info, font, color);
+        // text.x = text_offset_x;
+        // text.y += y - 30;
+        // stage.addChild(text);
 
         left_offset = (data.r_in - 1) * (w + offset) / 2;
         stride_width = stride * stride_width;

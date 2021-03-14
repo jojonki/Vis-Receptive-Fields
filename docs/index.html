@@ -63,6 +63,7 @@
             if (isNaN(n_layers)) {
                 return
             }
+            let layer_colors = JSON.parse(localStorage.getItem('layer_colors'));
             let headers = ['Layer #', 'Kernel', 'Stride', 'Padding', 'Dilation', 'In size', 'Out size', 'Receptive Field'];
             let tbl = document.createElement('table');
             tbl.className = 'table table-striped';
@@ -84,6 +85,7 @@
                     let net = JSON.parse(localStorage.getItem('layer' + layer));
                     console.log('--net-', net);
                     let tr = document.createElement('tr');
+                    tr.style.backgroundColor = layer_colors[layer - 1];
                     headers.forEach(head => {
                         let td = tr.insertCell();
                         let text = '';
