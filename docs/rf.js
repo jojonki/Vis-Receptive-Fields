@@ -26,8 +26,7 @@ class ConvLayer {
         let n_in = x.n_in;
         let j_in = x.j_in;
         let r_in = x.r_in;
-        // let start_in = x.start_in;
-        let start_in = 0.5;
+        let start_in = x.start_in;
 
         let n_out = Math.floor((n_in - k + 2 * p) / s) + 1;
 
@@ -112,9 +111,7 @@ function init() {
         let dilation = net.dilation;
         let color = layer_colors[layer % layer_colors.length];
         let y = stride_height * (layer + 2);
-        let prev_L = L;
         let prev_stride_width = stride_width;
-        let prev_left_offset = left_offset;
 
         L = Math.floor((L - kernel + padding * 2) / stride) + 1;
         if (L <= 0) {
@@ -131,9 +128,7 @@ function init() {
         text.x = text_offset_x;
         text.y += y - 30;
         stage.addChild(text);
-        // drawLine(stage, most_left_x + left_offset, 0, most_left_x + left_offset, 500, color);
 
-        let half_rf_w = ((data.r_in - 1) * stride_width) / 2;
         left_offset = (data.r_in - 1) * (w + offset) / 2;
         stride_width = stride * stride_width;
 
@@ -141,18 +136,15 @@ function init() {
         for (let i = 0; i < padding; i++) {
             // left padding
             let prev_y = stride_height * (layer + 1);
-            // let prev_x = most_left_x + prev_left_offset - prev_stride_width * (i + 1);
             let prev_x = begin_offset_list[layer] - prev_stride_width * (i + 1);
             drawRect(stage, prev_x, prev_y, w, h, pad_color);
             // right padding
-            // prev_x = most_left_x + left_offset + prev_stride_width * (prev_L + i);
             prev_x = end_offset_list[layer] + prev_stride_width * (i + 1);
             drawRect(stage, prev_x, prev_y, w, h, pad_color);
         }
 
         let data_offset_x = begin_offset_list[layer] - prev_stride_width * padding;
         for (let i = 0; i < L; i++) {
-            // let x = most_left_x + left_offset + stride_width * i - prev_stride_width * padding;
             let x = data_offset_x + stride_width * i + ((kernel - 1) * prev_stride_width) / 2;
             if (i == 0) {
                 begin_offset_list.push(x);
@@ -185,12 +177,9 @@ function init() {
         let rep_field = rf_list[layer];
         let rep_width = rep_field * (w + offset);
         let rep_x = rep_origin_x - (w + offset) * (rf_list[layer] - 1) / 2 - offset / 2;
-        // if (rep_x < most_left_x) {
-        // rep_x = most_left_x;
-        // }
-        let rep_y = stride_height - (hw * (layer + 1)) / 2;
+        let rep_y = stride_height - hw;
         let color = layer_colors[layer % layer_colors.length];
-        drawRect(stage, rep_x, rep_y, rep_width, w + hw * (layer + 1), color, 0.7, true);
+        drawRect(stage, rep_x, rep_y, rep_width, h + hw + stride_height * (layer + 1), color, 0.5, true);
     }
 
     stage.update();
