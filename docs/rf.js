@@ -51,13 +51,6 @@ class ConvLayer {
         let start_out = start_in + ((k - 1) / 2 - pad_L) * j_in;
         return new Variable({ 'n_in': n_out, 'j_in': j_out, 'r_in': r_out, 'start_in': start_out });
     }
-
-    // get rf() {
-    //     return this.receptive_field;
-    // }
-    // set rf(recptive_field) {
-    //     this.receptive_field = recptive_field;
-    // }
 }
 
 
@@ -108,10 +101,6 @@ function init() {
     }
     let begin_offset_list = [most_left_x];
     let end_offset_list = [most_left_x + stride_width * (L - 1)];
-    // var text = new createjs.Text('Input\nL=' + L, font, in_color);
-    // text.x = text_offset_x;
-    // text.y += y;
-    // stage.addChild(text);
 
     // draw layers
     let rf_list = [];
@@ -139,14 +128,6 @@ function init() {
         net.in_size = prev_L;
         net.out_size = L;
 
-        // text
-        // let layer_info = 'Layer ' + (layer + 1) + "\nK" + kernel + ",S" + stride + ",D" + dilation + ",P" + padding + "\nRF=" + rf_list[rf_list.length - 1]
-        //     + '\nL=' + L;
-        // let text = new createjs.Text(layer_info, font, color);
-        // text.x = text_offset_x;
-        // text.y += y - 30;
-        // stage.addChild(text);
-
         left_offset = (data.r_in - 1) * (w + offset) / 2;
         stride_width = stride * stride_width;
 
@@ -172,20 +153,14 @@ function init() {
             let is_focus_ndoe = (layer == n_layers - 1 && i == Math.floor((L - 1) / 2)) ? true : false;
             if (is_focus_ndoe) { // base data for RF
                 rep_origin_x = x;
-                drawRect(stage, x, y, w, h, 'Green');
-            } else {
-                drawRect(stage, x, y, w, h, color);
             }
+            drawRect(stage, x, y, w, h, color);
 
             // draw kernel lines
             let prev_y = y - stride_height + w;
             for (let j = 0; j < kernel; j++) {
                 let from_x = (x + hw) - prev_stride_width * (kernel - 1) * dilation / 2;
-                if (is_focus_ndoe) { // base data for RF
-                    drawLine(stage, x + hw, y, from_x + (prev_stride_width) * dilation * j, prev_y, 'Green');
-                } else {
-                    drawLine(stage, x + hw, y, from_x + (prev_stride_width) * dilation * j, prev_y, line_color);
-                }
+                drawLine(stage, x + hw, y, from_x + (prev_stride_width) * dilation * j, prev_y, line_color);
             }
         }
     }
