@@ -131,11 +131,23 @@
                 addLayer(); update(); updateTable();
             }
         }
+
+        function init() {
+            const checkbox = document.getElementById('renderChecked')
+            const canvas = document.getElementById('rf-canvas');
+            checkbox.addEventListener('change', (event) => {
+                if (event.currentTarget.checked) {
+                    canvas.style.display = 'block';
+                } else {
+                    canvas.style.display = 'none';
+                }
+            })
+        }
     </script>
     <script src="rf.js"></script>
 </head>
 
-<body onload="update();">
+<body onload="init(); update();">
     <header>
         <div class="navbar navbar-dark bg-dark box-shadow">
             <div class="container d-flex justify-content-between">
@@ -156,7 +168,7 @@
             <div class="col">
                 <!-- INPUT SIZE -->
                 <label class="form-label">INPUT SIZE</label>
-                <input class="form-control" id="textInputSize" value=30 onChange="update();">
+                <input class="form-control" id="textInputSize" value=30 onChange="tableKeyDown();">
             </div>
         </div>
         <div class="row">
@@ -189,6 +201,12 @@
                 </button>
                 <a href="#" id="downloader" class="btn btn-info" onclick="downloadAsPng()" download="image.png">Download
                     as PNG</a>
+            </div>
+            <div class="col">
+                <input class="form-check-input" type="checkbox" value="" id="renderChecked" checked>
+                <label class="form-check-label" for="flexCheckChecked">
+                    Render layers
+                </label>
             </div>
         </div>
         <div class="row" style="margin-top:0.5em">
