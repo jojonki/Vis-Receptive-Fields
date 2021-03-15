@@ -1,4 +1,4 @@
-# Receptive Field Vis
+# Vis Receptive Fields
 
 This web service visualizes your CNN layers and receptive fields.
 
