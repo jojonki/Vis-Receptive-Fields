@@ -126,6 +126,11 @@
             tbl.appendChild(tbody);
             layerTable.appendChild(tbl);
         }
+        function tableKeyDown() {
+            if (event.key === 'Enter') {
+                addLayer(); update(); updateTable();
+            }
+        }
     </script>
     <script src="rf.js"></script>
 </head>
@@ -157,19 +162,19 @@
         <div class="row">
             <div class="col">
                 <label class="form-label">KERNEL</label>
-                <input class="form-control" id="textKernelSize" value=3>
+                <input class="form-control" id="textKernelSize" value=3 onkeydown="tableKeyDown();">
             </div>
             <div class="col">
                 <label class="form-label">STRIDE</label>
-                <input class="form-control" id="textStride" value=2>
+                <input class="form-control" id="textStride" value=2 onkeydown="tableKeyDown();">
             </div>
             <div class="col">
                 <label class="form-label">PADDING</label>
-                <input class="form-control" id="textPadding" value=2>
+                <input class="form-control" id="textPadding" value=2 onkeydown="tableKeyDown();">
             </div>
             <div class="col">
                 <label class="form-label">DILATION</label>
-                <input class="form-control" id="textDilation" value=1>
+                <input class="form-control" id="textDilation" value=1 onkeydown="tableKeyDown();">
             </div>
         </div>
 
