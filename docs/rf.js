@@ -76,6 +76,7 @@ function update() {
 
     // initialize
     let stage = new createjs.Stage("rf-canvas");
+
     let MyNet = [];
     let n_layers = localStorage.getItem('n_layers');
     if (n_layers == null) {
@@ -154,8 +155,11 @@ function update() {
             let is_focus_ndoe = (layer == n_layers - 1 && i == Math.floor((L - 1) / 2)) ? true : false;
             if (is_focus_ndoe) { // base data for RF
                 rep_origin_x = x;
+                drawRect(stage, x, y, w, h, "red");
             }
-            drawRect(stage, x, y, w, h, color);
+            else {
+                drawRect(stage, x, y, w, h, color);
+            }
 
             // draw kernel lines
             let prev_y = y - stride_height + w;
