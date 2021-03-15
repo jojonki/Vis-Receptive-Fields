@@ -24,3 +24,8 @@ function drawLine(stage, x1, y1, x2, y2, color, alpha = 1.0) {
     let shape = new createjs.Shape(line);
     stage.addChild(shape);
 }
+
+function downloadAsPng() {
+    document.getElementById("downloader").download = "image.png";
+    document.getElementById("downloader").href = document.getElementById("rf-canvas").toDataURL("image/png").replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+}
