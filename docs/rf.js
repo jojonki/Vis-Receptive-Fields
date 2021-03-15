@@ -118,7 +118,7 @@ function update() {
         let prev_stride_width = stride_width;
 
         let prev_L = L;
-        L = Math.floor((L - kernel + padding * 2) / stride) + 1;
+        L = Math.floor((L + 2 * padding - (dilation * (kernel - 1) + 1)) / stride) + 1;
         if (L <= 0) {
             alert('No more layers can be added.');
             return;
